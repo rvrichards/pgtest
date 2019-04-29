@@ -44,7 +44,8 @@ func main() {
     //err = db.QueryRow(sqlStatement, "wilma", 42, "This is not a test", "Sword of Truth").Scan(&id)
     //err = db.QueryRow(sqlStatement, "betty", 41, "Yabba Dabba", "Turin Shoud").Scan(&id)
     //err = db.QueryRow(sqlStatement, "bambam", 2, "Yabba Dabba Doo", "A club").Scan(&id)
-    err = db.QueryRow(sqlStatement, "Bob2", 2, "Bob2 was here", "BobBob").Scan(&id)
+    // err = db.QueryRow(sqlStatement, "Bob2", 2, "Bob2 was here", "BobBob").Scan(&id)
+    err = db.QueryRow(sqlStatement, "Alice", 22, "Likes crypt", "Chainsaw").Scan(&id)
     if err != nil {  panic(err)  }
     fmt.Println("New record ID is:", id)
 
@@ -76,6 +77,8 @@ func main() {
         default:
             panic(err)
         }
+
+    // Select multiple rows
     rows, err := db.Query("SELECT id, name FROM client LIMIT $1", 3)
     if err != nil { panic(err) }
     defer rows.Close()
@@ -92,16 +95,16 @@ func main() {
         panic(err)
     } 
 
-    // Query - select mulptile rows
+    // Query - select mulptile rows, just another go.
     rows, err = db.Query("SELECT id, name FROM client WHERE age=$1 LIMIT $2", 42, 3)
     if err != nil { panic(err)  }
     defer rows.Close()
     for rows.Next() {
         var id int
-        var firstName string
-        err = rows.Scan(&id, &firstName)
+        var name string
+        err = rows.Scan(&id, &name)
         if err != nil { panic(err) }
-        fmt.Println(id, firstName)
+        fmt.Println("Multiple select: ", id, name)
     }
     // Any more errors?
     err = rows.Err()
